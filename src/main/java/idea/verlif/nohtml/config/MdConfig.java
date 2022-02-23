@@ -8,9 +8,15 @@ import java.util.Properties;
  */
 public class MdConfig {
 
-    private String profilePath;
+    public static final String DOCS_NAME = "docs";
 
-    private String footerPath;
+    public static final String CONFIG_NAME = "config";
+
+    public static final String TAGS_NAME = "tags";
+
+    public static final String PATH_SPLIT = "/";
+
+    public static final String INDEX_NAME = "index.md";
 
     /**
      * 标题
@@ -27,6 +33,11 @@ public class MdConfig {
      */
     private int length;
 
+    /**
+     * 首页文件名
+     */
+    private String indexName;
+
     public MdConfig() {
     }
 
@@ -36,19 +47,17 @@ public class MdConfig {
         if (!file.exists()) {
             try (FileWriter writer = new FileWriter(file)) {
                 writer.write("title=INDEX\n");
-                writer.write("profilePath=config/profile.md\n");
-                writer.write("footerPath=config/footer.md\n");
                 writer.write("size=5\n");
                 writer.write("length=25\n");
+                writer.write("indexName=" + INDEX_NAME);
                 writer.flush();
             }
         }
         properties.load(new FileInputStream(file));
         title = properties.getProperty("title", "INDEX");
-        profilePath = properties.getProperty("profilePath", "config/profile.md");
-        footerPath = properties.getProperty("footerPath", "config/footer.md");
         size = Integer.parseInt(properties.getProperty("size", "5"));
         length = Integer.parseInt(properties.getProperty("length", "25"));
+        indexName = properties.getProperty("indexName", INDEX_NAME);
     }
 
     public String getTitle() {
@@ -71,11 +80,17 @@ public class MdConfig {
         this.length = length;
     }
 
+    public String getIndexName() {
+        return indexName;
+    }
+
     public String getProfile() throws IOException {
+        String profilePath = CONFIG_NAME + PATH_SPLIT + "profile.md";
         return getOrCreateFile(new File(profilePath));
     }
 
     public String getFooter() throws IOException {
+        String footerPath = CONFIG_NAME + PATH_SPLIT + "footer.md";
         return getOrCreateFile(new File(footerPath));
     }
 

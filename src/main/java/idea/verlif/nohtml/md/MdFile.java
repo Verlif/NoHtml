@@ -1,4 +1,6 @@
-package idea.verlif.nohtml.mk;
+package idea.verlif.nohtml.md;
+
+import idea.verlif.nohtml.config.MdConfig;
 
 import java.io.File;
 import java.io.FileReader;
@@ -67,7 +69,20 @@ public class MdFile {
     }
 
     public void setPath(String path) {
-        this.path = path;
+        if (path.startsWith("/") || path.startsWith("\\")) {
+            this.path = path.replaceAll("\\\\", "/").substring(1);
+        } else {
+            this.path = path;
+        }
+    }
+
+    public String getTag() {
+        int i = path.lastIndexOf(MdConfig.PATH_SPLIT);
+        if (i == -1) {
+            return path;
+        } else {
+            return path.substring(i + 1);
+        }
     }
 
     private void readProfile(File file) throws IOException {
@@ -112,7 +127,7 @@ public class MdFile {
     }
 
     public static boolean isMkFile(File file) {
-        return file.getName().endsWith(SUFFIX);
+        return file.getName().toLowerCase(Locale.ROOT).endsWith(SUFFIX);
     }
 
     @Override
@@ -123,6 +138,7 @@ public class MdFile {
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", profile='" + profile + '\'' +
+                ", path='" + path + '\'' +
                 '}';
     }
 }

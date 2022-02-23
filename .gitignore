@@ -1,2 +1,4 @@
 # 项目排除路径
 /target/
+/docs/
+/src/main/java/idea/verlif/nohtml/test/
