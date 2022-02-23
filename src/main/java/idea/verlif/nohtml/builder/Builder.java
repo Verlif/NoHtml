@@ -1,9 +1,7 @@
 package idea.verlif.nohtml.builder;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Verlif
@@ -37,7 +35,7 @@ public abstract class Builder {
                 throw new FileNotFoundException("Can not create directory: " + file.getPath());
             }
         }
-        try (FileWriter writer = new FileWriter(file)) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
             writer.write(build());
             writer.flush();
         }

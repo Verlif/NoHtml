@@ -2,9 +2,8 @@ package idea.verlif.nohtml.md;
 
 import idea.verlif.nohtml.config.MdConfig;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -87,13 +86,12 @@ public class MdFile {
 
     private void readProfile(File file) throws IOException {
         try (
-                FileReader reader = new FileReader(file)
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))
         ) {
-            char[] b = new char[1024];
             StringBuilder sb = new StringBuilder();
-            int length;
-            while ((length = reader.read(b)) > 0) {
-                sb.append(b, 0, length);
+            String li;
+            while ((li = reader.readLine()) != null) {
+                sb.append(li).append("\n");
             }
             String[] lines = sb.toString().split("\n");
             StringBuilder prof = new StringBuilder();

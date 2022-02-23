@@ -39,12 +39,18 @@ public class IndexBuilder extends Builder {
      */
     private final List<MdFile> newest;
 
+    /**
+     * 未归档
+     */
+    private final List<MdFile> hashes;
+
     private final MdConfig config;
 
     public IndexBuilder(String base, MdConfig config) {
         this.base = base;
         this.desc = new StringBuilder();
         this.newest = new ArrayList<>();
+        this.hashes = new ArrayList<>();
         this.footer = new StringBuilder();
 
         this.config = config;
@@ -66,6 +72,11 @@ public class IndexBuilder extends Builder {
         return this;
     }
 
+    public IndexBuilder addHashes(MdFile mdFile) {
+        hashes.add(mdFile);
+        return this;
+    }
+
     public IndexBuilder footerLine(String line) {
         footer.append(line);
         return this;
@@ -82,12 +93,22 @@ public class IndexBuilder extends Builder {
         // 首页描述
         sb.append(config.getProfile()).append("\n\n");
         sb.append(desc);
+        // 未归档
+        sb.append("## 未归档\n\n");
+        hashes.sort((o1, o2) -> (int) (o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()));
+        for (int i = 0, size = Math.min(config.getSize(), hashes.size()); i < size; i++) {
+            MdFile mdFile = hashes.get(i);
+            sb.append(oneMdLink(mdFile)).append("\n\n");
+        }
+        sb.append("------\n\n");
         // 最新md文件
+        sb.append("## 最新\n\n");
         newest.sort((o1, o2) -> (int) (o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()));
         for (int i = 0, size = Math.min(config.getSize(), newest.size()); i < size; i++) {
             MdFile mdFile = newest.get(i);
             sb.append(oneMdLink(mdFile)).append("\n\n");
         }
+        // 标签归档
         sb.append("------\n\n[")
                 .append("标签归档](")
                 .append(TagListBuilder.buildFilename())
