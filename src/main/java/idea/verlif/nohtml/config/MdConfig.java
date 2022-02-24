@@ -1,6 +1,7 @@
 package idea.verlif.nohtml.config;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -45,7 +46,7 @@ public class MdConfig {
         File file = new File("config.properties");
         Properties properties = new Properties();
         if (!file.exists()) {
-            try (FileWriter writer = new FileWriter(file)) {
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
                 writer.write("title=INDEX\n");
                 writer.write("size=5\n");
                 writer.write("length=25\n");
@@ -97,7 +98,7 @@ public class MdConfig {
     private String getOrCreateFile(File file) throws IOException {
         if (!file.exists()) {
             if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
-                try (FileWriter writer = new FileWriter(file)) {
+                try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
                     writer.write("");
                     writer.flush();
                 }
@@ -105,7 +106,7 @@ public class MdConfig {
                 throw new IOException("Can not create the directory: " + file.getParent());
             }
         }
-        try (FileReader reader = new FileReader(file)) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
             char[] b = new char[1024];
             StringBuilder sb = new StringBuilder();
             int length;

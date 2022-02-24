@@ -38,7 +38,7 @@ public class MdFile {
             throw new IOException("This is not a markdown file: " + name);
         }
         this.path = path;
-        this.filename = name.substring(0, name.length() - 3);
+        this.filename = name.substring(0, name.length() - 3).replaceAll(" ", "&#32;");;
         readProfile(file);
         setTime(file);
     }
@@ -68,6 +68,7 @@ public class MdFile {
     }
 
     public void setPath(String path) {
+        path = path.replaceAll(" ", "&#32;");
         if (path.startsWith("/") || path.startsWith("\\")) {
             this.path = path.replaceAll("\\\\", "/").substring(1);
         } else {

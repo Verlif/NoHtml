@@ -73,7 +73,9 @@ public class IndexBuilder extends Builder {
     }
 
     public IndexBuilder addHashes(MdFile mdFile) {
-        hashes.add(mdFile);
+        if (mdFile.getPath() == null || mdFile.getPath().length() == 0) {
+            hashes.add(mdFile);
+        }
         return this;
     }
 
