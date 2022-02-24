@@ -97,7 +97,7 @@ public class IndexBuilder extends Builder {
         sb.append(desc);
         // 未归档
         sb.append("## 未归档\n\n");
-        hashes.sort((o1, o2) -> (int) (o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()));
+        hashes.sort((o1, o2) -> (int) ((o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()) / 1000));
         for (int i = 0, size = Math.min(config.getSize(), hashes.size()); i < size; i++) {
             MdFile mdFile = hashes.get(i);
             sb.append(oneMdLink(mdFile)).append("\n\n");
@@ -105,7 +105,7 @@ public class IndexBuilder extends Builder {
         sb.append("------\n\n");
         // 最新md文件
         sb.append("## 最新\n\n");
-        newest.sort((o1, o2) -> (int) (o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()));
+        newest.sort((o1, o2) -> (int) ((o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()) / 1000));
         for (int i = 0, size = Math.min(config.getSize(), newest.size()); i < size; i++) {
             MdFile mdFile = newest.get(i);
             sb.append(oneMdLink(mdFile)).append("\n\n");
@@ -142,7 +142,7 @@ public class IndexBuilder extends Builder {
                 .append(")");
         String profile = mdFile.getProfile();
         if (profile != null && profile.length() > 0) {
-            sb.append("\n> ")
+            sb.append("\n\n> ")
                     .append(profile.length() > config.getLength() ? profile.substring(0, config.getLength()) + "..." : profile);
         }
         return sb.toString();

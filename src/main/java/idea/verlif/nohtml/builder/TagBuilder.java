@@ -78,21 +78,22 @@ public class TagBuilder extends Builder {
                 for (File file : files) {
                     mdFiles.add(new MdFile(path, file));
                 }
-                mdFiles.sort((o1, o2) -> (int) (o2.getCreateTime().getTime() - o1.getCreateTime().getTime()));
+                // 文件排序
+                mdFiles.sort((o1, o2) -> (int) ((o2.getCreateTime().getTime() - o1.getCreateTime().getTime()) / 1000));
                 int year = -1;
-                int moth = -1;
+                int day = -1;
                 Calendar calendar = Calendar.getInstance();
                 for (MdFile mdFile : mdFiles) {
                     // 划分时间点
                     calendar.setTime(mdFile.getCreateTime());
                     if (calendar.get(Calendar.YEAR) != year) {
                         year = calendar.get(Calendar.YEAR);
+                        day = calendar.get(Calendar.DAY_OF_MONTH);
                         sb.append("## __").append(year).append("年__\n\n");
-                        moth = calendar.get(Calendar.MONTH);
-                        sb.append("### __").append(moth + 1).append("月__\n\n");
-                    } else if (calendar.get(Calendar.MONTH) != moth) {
-                        moth = calendar.get(Calendar.MONTH);
-                        sb.append("### __").append(moth + 1).append("月__\n\n");
+                        sb.append("### ").append(day).append("日 __").append(calendar.get(Calendar.MONTH) + 1).append("月__\n\n");
+                    } else if (calendar.get(Calendar.DAY_OF_MONTH) != day) {
+                        day = calendar.get(Calendar.DAY_OF_MONTH);
+                        sb.append("### ").append(day).append("日 __").append(calendar.get(Calendar.MONTH) + 1).append("月__\n\n");
                     }
                     // 描述文件
                     sb.append(oneMdLink(mdFile)).append("\n\n");
@@ -114,7 +115,7 @@ public class TagBuilder extends Builder {
                 .append(")");
         String profile = mdFile.getProfile();
         if (profile != null && profile.length() > 0) {
-            sb.append("\n> ")
+            sb.append("\n\n> ")
                     .append(profile.length() > config.getLength() ? profile.substring(0, config.getLength()) + "..." : profile);
         }
         return sb.toString();

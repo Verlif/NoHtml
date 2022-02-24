@@ -22,7 +22,7 @@ public class Main {
         MdFinder finder = new MdFinder(MdConfig.DOCS_NAME);
         List<MdFile> files = finder.getAllMdFiles();
         System.out.println("Found " + files.size() + " markdown files.");
-        files.sort((o1, o2) -> (int) (o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()));
+        files.sort((o1, o2) -> (int) ((o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()) / 1000));
         IndexBuilder builder = new IndexBuilder(MdConfig.DOCS_NAME, config);
         for (MdFile file : files) {
             builder.addNewest(file);
