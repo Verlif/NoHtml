@@ -22,22 +22,27 @@ public class MdConfig {
     /**
      * 标题
      */
-    private String title;
+    private String title = "INDEX";
 
     /**
      * MD文件列表最大数量
      */
-    private int size;
+    private int size = 5;
 
     /**
      * MD文件列表中，每个概览的允许长度
      */
-    private int length;
+    private int length = 25;
 
     /**
      * 首页文件名
      */
-    private String indexName;
+    private String indexName = INDEX_NAME;
+
+    /**
+     * 标题分割符
+     */
+    private String titleSplit = "⚪";
 
     public MdConfig() {
     }
@@ -46,19 +51,32 @@ public class MdConfig {
         File file = new File("config.properties");
         Properties properties = new Properties();
         if (!file.exists()) {
-            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
-                writer.write("title=INDEX\n");
-                writer.write("size=5\n");
-                writer.write("length=25\n");
-                writer.write("indexName=" + INDEX_NAME);
-                writer.flush();
-            }
+            saveConfig(file);
         }
-        properties.load(new FileInputStream(file));
-        title = properties.getProperty("title", "INDEX");
-        size = Integer.parseInt(properties.getProperty("size", "5"));
-        length = Integer.parseInt(properties.getProperty("length", "25"));
-        indexName = properties.getProperty("indexName", INDEX_NAME);
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+            properties.load(reader);
+        }
+        loadConfig(properties);
+        saveConfig(file);
+    }
+
+    private void saveConfig(File file) throws FileNotFoundException {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))) {
+            writer.write("title=" + title);
+            writer.write("\nsize=" + size);
+            writer.write("\nlength=" + length);
+            writer.write("\nindexName=" + indexName);
+            writer.write("\ntitleSplit=" + titleSplit);
+            writer.flush();
+        }
+    }
+
+    private void loadConfig(Properties properties) {
+        title = properties.getProperty("title", title);
+        size = Integer.parseInt(properties.getProperty("size", String.valueOf(size)));
+        length = Integer.parseInt(properties.getProperty("length", String.valueOf(length)));
+        indexName = properties.getProperty("indexName", indexName);
+        titleSplit = properties.getProperty("titleSplit", titleSplit);
     }
 
     public String getTitle() {
@@ -93,6 +111,10 @@ public class MdConfig {
     public String getFooter() throws IOException {
         String footerPath = CONFIG_NAME + PATH_SPLIT + "footer.md";
         return getOrCreateFile(new File(footerPath));
+    }
+
+    public String getTitleSplit() {
+        return titleSplit;
     }
 
     private String getOrCreateFile(File file) throws IOException {

@@ -2,6 +2,7 @@ package idea.verlif.nohtml.builder;
 
 import idea.verlif.nohtml.config.MdConfig;
 import idea.verlif.nohtml.md.MdFile;
+import idea.verlif.nohtml.sort.CreateTimeSort;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class TagBuilder extends Builder {
                     mdFiles.add(new MdFile(path, file));
                 }
                 // 文件排序
-                mdFiles.sort((o1, o2) -> (int) ((o2.getCreateTime().getTime() - o1.getCreateTime().getTime()) / 1000));
+                mdFiles.sort(new CreateTimeSort());
                 int year = -1;
                 int day = -1;
                 Calendar calendar = Calendar.getInstance();

@@ -62,6 +62,8 @@ size=5
 length=25
 # 首页文件名
 indexName=readme.md
+# 标题分隔符
+titleSplit=○
 ```
 
 ------

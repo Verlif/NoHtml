@@ -5,6 +5,7 @@ import idea.verlif.nohtml.builder.TagListBuilder;
 import idea.verlif.nohtml.config.MdConfig;
 import idea.verlif.nohtml.md.MdFile;
 import idea.verlif.nohtml.md.MdFinder;
+import idea.verlif.nohtml.sort.UpdateTimeSort;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Main {
         MdFinder finder = new MdFinder(MdConfig.DOCS_NAME);
         List<MdFile> files = finder.getAllMdFiles();
         System.out.println("Found " + files.size() + " markdown files.");
-        files.sort((o1, o2) -> (int) ((o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()) / 1000));
+        files.sort(new UpdateTimeSort());
         IndexBuilder builder = new IndexBuilder(MdConfig.DOCS_NAME, config);
         for (MdFile file : files) {
             builder.addNewest(file);

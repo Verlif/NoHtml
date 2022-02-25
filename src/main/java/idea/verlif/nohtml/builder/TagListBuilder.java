@@ -64,8 +64,8 @@ public class TagListBuilder extends Builder {
                     .append(tag.getTag())
                     .append("](")
                     .append(TagBuilder.buildFilename(tag.getTag()))
-                    .append(")")
-                    .append(" ○ ").append(tag.getMdFileCount()).append("\n");
+                    .append(") ")
+                    .append(config.getTitleSplit()).append(" ").append(tag.getMdFileCount()).append("\n");
             sb.append(listMdTags(prefix + "  ", tagLinkNow, tag.getChildren()));
         }
         return sb.toString();
