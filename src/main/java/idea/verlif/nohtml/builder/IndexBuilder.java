@@ -92,9 +92,15 @@ public class IndexBuilder extends Builder {
         }
         // 标题
         sb.append("# ").append(title).append("\n\n");
+        // 标签归档
+        sb.append("[")
+                .append("标签归档](")
+                .append(TagListBuilder.buildFilename())
+                .append(")\n\n");
         // 首页描述
         sb.append(config.getProfile()).append("\n\n");
         sb.append(desc);
+        sb.append("------\n\n");
         // 未归档
         sb.append("## 未归档\n\n");
         hashes.sort((o1, o2) -> (int) ((o2.getUpdateTime().getTime() - o1.getUpdateTime().getTime()) / 1000));
@@ -110,13 +116,8 @@ public class IndexBuilder extends Builder {
             MdFile mdFile = newest.get(i);
             sb.append(oneMdLink(mdFile)).append("\n\n");
         }
-        // 标签归档
-        sb.append("------\n\n[")
-                .append("标签归档](")
-                .append(TagListBuilder.buildFilename())
-                .append(")\n\n");
         // 结尾描述
-        sb.append(config.getFooter()).append("\n\n")
+        sb.append("------\n\n").append(config.getFooter()).append("\n\n")
                 .append(footer);
         return sb.toString();
     }

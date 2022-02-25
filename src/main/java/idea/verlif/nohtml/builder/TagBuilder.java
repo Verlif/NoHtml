@@ -5,6 +5,7 @@ import idea.verlif.nohtml.md.MdFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.List;
  * @date 2022/2/23 10:19
  */
 public class TagBuilder extends Builder {
+
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
     /**
      * 基础路径
@@ -32,11 +35,6 @@ public class TagBuilder extends Builder {
     private final String tagLink;
 
     /**
-     * 标签包含的MD文件列表
-     */
-    private final List<MdFile> mdFiles;
-
-    /**
      * MD文件配置
      */
     private final MdConfig config;
@@ -45,13 +43,8 @@ public class TagBuilder extends Builder {
         this.path = ".." + MdConfig.PATH_SPLIT + MdConfig.DOCS_NAME + tagLink.replaceAll(TagListBuilder.SPLIT, MdConfig.PATH_SPLIT) + MdConfig.PATH_SPLIT + tag;
         this.tag = tag;
         this.tagLink = tagLink;
-        this.mdFiles = new ArrayList<>();
 
         this.config = config;
-    }
-
-    public void addMdFile(MdFile mdFile) {
-        mdFiles.add(mdFile);
     }
 
     @Override
@@ -69,6 +62,7 @@ public class TagBuilder extends Builder {
             }
         }
         sb.append(" / ").append(tag).append("\n\n");
+        sb.append("[标签归档](").append("../").append(MdConfig.TAGS_NAME).append(MdFile.SUFFIX).append(")\n\n");
         // 文件列表
         File dir = new File(path.substring(1));
         if (dir.exists() && dir.isDirectory()) {
@@ -105,6 +99,7 @@ public class TagBuilder extends Builder {
 
     private String oneMdLink(MdFile mdFile) {
         StringBuilder sb = new StringBuilder();
+        // 标题
         sb.append("### [")
                 .append(mdFile.getTitle())
                 .append("](")
@@ -112,10 +107,11 @@ public class TagBuilder extends Builder {
                 .append(MdConfig.PATH_SPLIT)
                 .append(mdFile.getFilename())
                 .append(MdFile.SUFFIX)
-                .append(")");
+                .append(")\n\n");
+        // 概要
         String profile = mdFile.getProfile();
         if (profile != null && profile.length() > 0) {
-            sb.append("\n\n> ")
+            sb.append("> ")
                     .append(profile.length() > config.getLength() ? profile.substring(0, config.getLength()) + "..." : profile);
         }
         return sb.toString();

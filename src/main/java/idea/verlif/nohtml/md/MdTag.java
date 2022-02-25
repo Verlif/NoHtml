@@ -16,6 +16,8 @@ public class MdTag {
 
     private final List<MdTag> children;
 
+    private int mdFileCount;
+
     public MdTag(String tag) {
         this.tag = tag;
         this.children = new ArrayList<>();
@@ -35,6 +37,18 @@ public class MdTag {
 
     public List<MdTag> getChildren() {
         return children;
+    }
+
+    public int getMdFileCount() {
+        return mdFileCount;
+    }
+
+    public void setMdFileCount(int mdFileCount) {
+        this.mdFileCount = mdFileCount;
+    }
+
+    public void mdFileCountAdd() {
+        this.mdFileCount ++;
     }
 
     @Override

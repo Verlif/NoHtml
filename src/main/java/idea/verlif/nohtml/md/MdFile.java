@@ -20,6 +20,8 @@ public class MdFile {
 
     public static final String SUFFIX = ".md";
 
+    public static final String SPACE = "&#32;";
+
     private final String filename;
 
     private String title;
@@ -38,7 +40,7 @@ public class MdFile {
             throw new IOException("This is not a markdown file: " + name);
         }
         this.path = path;
-        this.filename = name.substring(0, name.length() - 3).replaceAll(" ", "&#32;");;
+        this.filename = name.substring(0, name.length() - 3).replaceAll(" ", SPACE);;
         readProfile(file);
         setTime(file);
     }

@@ -1,10 +1,30 @@
 # NoHTML
 
+`NoHTML`是一个用于整理`Markdown`文件的工具。
+与`Jekyll`等网页生成工具不同，尽管`NoHTML`生成的文件可以导航，但`NoHTML`的主要目标是作为`Markdown`文件的整理工具。
+
+## 一些问题
+
 我为什么要写`NoHTML`？  
 我不喜欢通过HTML的方式书写资料或是文档，富文本也不行，只有Markdown才是真爱。
 
-`NoHTML`可以干什么？  
-我不知道，反正我目前是把这个用于做个人资料整理。然后放到GitHub仓库中，用readme做首页，就很方便。
+`NoHTML`可以做什么？  
+我不知道，反正我目前是把这个用于做个人资料整理。然后放到GitHub仓库中，用readme做首页，就可以当做一个资料库。  
+这个 [records](https://github.com/Verlif/records) 就是我自己用NoHTML生成的。
+
+`NoHTML`不可以做什么？
+
+* 不能生成网站相关数据
+* 不可以设定主题
+* 没有拓展插件
+* 高度定制需要Java基础
+
+为什么是`NoHTML`？
+
+* 简单。不需要任何编程知识，不需要安装，下载后直接运行即可。
+* 轻量。只会生成配置文件与导航`markdown`文件。
+* 纯净。对原`markdown`文件零修改。
+* 统一。完全基于`markdown`使用逻辑，没有`HTML`文件。
 
 ## 使用
 
@@ -13,8 +33,14 @@
 1. 创建管理根目录（例如MyPage)
 2. 将jar包放在管理根目录中（MyPage/NoHTML.jar)
 3. 在管理根目录下创建docs文件夹用于放置需要管理的MD文件（MyPage/docs)
-4. 运行jar包（例如`java -jar NoHTML.jar`
+4. 运行jar包（例如`java -jar NoHTML.jar`)
 5. 完成
+
+其实就是下面这张图的样子。程序会读取docs下的文件来生成管理结构。
+
+![目录结构](imgs/目录结构.png)
+
+每次使用只需要运行jar文件，其他文件会自行更新。
 
 ## 说明
 

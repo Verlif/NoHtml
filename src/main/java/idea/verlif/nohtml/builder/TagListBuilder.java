@@ -50,6 +50,7 @@ public class TagListBuilder extends Builder {
     @Override
     public String build() {
         return "# 标签\n\n" +
+                "[" + config.getTitle() + "](" + config.getIndexName() + ")\n\n" +
                 listMdTags("", "", tags);
     }
 
@@ -63,7 +64,8 @@ public class TagListBuilder extends Builder {
                     .append(tag.getTag())
                     .append("](")
                     .append(TagBuilder.buildFilename(tag.getTag()))
-                    .append(")\n");
+                    .append(")")
+                    .append(" ○ ").append(tag.getMdFileCount()).append("\n");
             sb.append(listMdTags(prefix + "  ", tagLinkNow, tag.getChildren()));
         }
         return sb.toString();

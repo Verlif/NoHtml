@@ -125,6 +125,9 @@ public class MdFinder {
             if (files != null) {
                 MdTag tag = new MdTag(getLastDirname(file.getPath()));
                 for (File f : files) {
+                    if (MdFile.isMkFile(f)) {
+                        tag.mdFileCountAdd();
+                    }
                     MdTag child = getTagFromFile(f);
                     if (child != null) {
                         tag.addChild(child);
