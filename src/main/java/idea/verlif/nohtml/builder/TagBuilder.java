@@ -6,7 +6,6 @@ import idea.verlif.nohtml.sort.CreateTimeSort;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -17,8 +16,6 @@ import java.util.List;
  * @date 2022/2/23 10:19
  */
 public class TagBuilder extends Builder {
-
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
     /**
      * 基础路径
@@ -101,7 +98,7 @@ public class TagBuilder extends Builder {
     private String oneMdLink(MdFile mdFile) {
         StringBuilder sb = new StringBuilder();
         // 标题
-        sb.append("### [")
+        sb.append("#### [")
                 .append(mdFile.getTitle())
                 .append("](")
                 .append(mdFile.getPath())

@@ -1,5 +1,8 @@
 package idea.verlif.nohtml.md;
 
+import idea.verlif.nohtml.config.MdConfig;
+import idea.verlif.nohtml.sort.CreateTimeSort;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,21 +17,33 @@ public class MdTag {
 
     private final String tag;
 
+    private final String path;
+
     private final List<MdTag> children;
 
-    private int mdFileCount;
+    private final List<MdFile> files;
 
-    public MdTag(String tag) {
-        this.tag = tag;
+    public MdTag(String path) {
+        this.tag = MdFinder.getLastDirname(path);
+        this.path = path.replaceAll("\\\\", MdConfig.PATH_SPLIT);
         this.children = new ArrayList<>();
+        this.files = new ArrayList<>();
     }
 
-    public void addChild(String tag) {
-        children.add(new MdTag(tag));
+    public void addChild(String path) {
+        children.add(new MdTag(path));
     }
 
     public void addChild(MdTag tag) {
         children.add(tag);
+    }
+
+    public void addMdFile(MdFile mdFile) {
+        this.files.add(mdFile);
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public String getTag() {
@@ -39,16 +54,16 @@ public class MdTag {
         return children;
     }
 
+    public MdFile getLastMdFile() {
+        if (files.size() == 0) {
+            return null;
+        }
+        files.sort(new CreateTimeSort());
+        return files.get(0);
+    }
+
     public int getMdFileCount() {
-        return mdFileCount;
-    }
-
-    public void setMdFileCount(int mdFileCount) {
-        this.mdFileCount = mdFileCount;
-    }
-
-    public void mdFileCountAdd() {
-        this.mdFileCount ++;
+        return files.size();
     }
 
     @Override

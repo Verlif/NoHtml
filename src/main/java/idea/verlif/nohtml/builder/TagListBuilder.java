@@ -60,12 +60,23 @@ public class TagListBuilder extends Builder {
             // 添加标签生成器
             tagBuilders.add(new TagBuilder(tag.getTag(), tagLink, config));
             String tagLinkNow = tagLink + SPLIT + tag.getTag();
-            sb.append(prefix).append("* [")
+            sb.append(prefix).append("* __[")
                     .append(tag.getTag())
                     .append("](")
                     .append(TagBuilder.buildFilename(tag.getTag()))
-                    .append(") ")
-                    .append(config.getTitleSplit()).append(" ").append(tag.getMdFileCount()).append("\n");
+                    .append(")__");
+            // 添加标签的额外信息
+            if (tag.getMdFileCount() > 0) {
+                MdFile mdFile = tag.getLastMdFile();
+                sb.append("\n\n  ").append(prefix).append("↑ 共计 ")
+                        .append(tag.getMdFileCount()).append(" 篇，最新的一篇为 [")
+                        .append(mdFile.getTitle())
+                        .append("](")
+                        .append(tag.getPath()).append(MdConfig.PATH_SPLIT)
+                        .append(mdFile.getFilename()).append(MdFile.SUFFIX)
+                        .append(")\n\n");
+            }
+            // 添加子标签
             sb.append(listMdTags(prefix + "  ", tagLinkNow, tag.getChildren()));
         }
         return sb.toString();

@@ -123,10 +123,13 @@ public class MdFinder {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
-                MdTag tag = new MdTag(getLastDirname(file.getPath()));
+                MdTag tag = new MdTag(file.getPath());
                 for (File f : files) {
                     if (MdFile.isMkFile(f)) {
-                        tag.mdFileCountAdd();
+                        try {
+                            tag.addMdFile(new MdFile(path, f));
+                        } catch (IOException ignored) {
+                        }
                     }
                     MdTag child = getTagFromFile(f);
                     if (child != null) {
@@ -139,7 +142,7 @@ public class MdFinder {
         return null;
     }
 
-    private String getLastDirname(String path) {
+    public static String getLastDirname(String path) {
         int i = path.replaceAll("\\\\", MdConfig.PATH_SPLIT).lastIndexOf(MdConfig.PATH_SPLIT);
         if (i == -1) {
             return path;
