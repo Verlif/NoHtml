@@ -2,6 +2,7 @@ package idea.verlif.nohtml.config;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -37,7 +38,7 @@ public class MdConfig {
     /**
      * 首页文件名
      */
-    private String indexName = INDEX_NAME;
+    private String[] indexNames = new String[]{INDEX_NAME};
 
     /**
      * 标题分割符
@@ -65,18 +66,29 @@ public class MdConfig {
             writer.write("title=" + title);
             writer.write("\nsize=" + size);
             writer.write("\nlength=" + length);
-            writer.write("\nindexName=" + indexName);
+            String indexName = Arrays.toString(indexNames);
+            writer.write("\nindexName=" + indexName.substring(1, indexName.length() - 1));
             writer.write("\ntitleSplit=" + titleSplit);
             writer.flush();
         }
     }
 
     private void loadConfig(Properties properties) {
-        title = properties.getProperty("title", title);
-        size = Integer.parseInt(properties.getProperty("size", String.valueOf(size)));
-        length = Integer.parseInt(properties.getProperty("length", String.valueOf(length)));
-        indexName = properties.getProperty("indexName", indexName);
-        titleSplit = properties.getProperty("titleSplit", titleSplit);
+        if (properties.containsKey("title")) {
+            title = properties.getProperty("title");
+        }
+        if (properties.containsKey("size")) {
+            size = Integer.parseInt(properties.getProperty("size"));
+        }
+        if (properties.containsKey("length")) {
+            length = Integer.parseInt(properties.getProperty("length"));
+        }
+        if (properties.containsKey("indexName")) {
+            indexNames = properties.getProperty("indexName").split(",");
+        }
+        if (properties.containsKey("titleSplit")) {
+            titleSplit = properties.getProperty("titleSplit");
+        }
     }
 
     public String getTitle() {
@@ -100,7 +112,11 @@ public class MdConfig {
     }
 
     public String getIndexName() {
-        return indexName;
+        return indexNames[0];
+    }
+
+    public String[] getIndexNames() {
+        return indexNames;
     }
 
     public String getProfile() throws IOException {

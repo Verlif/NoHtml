@@ -152,7 +152,10 @@ public class IndexBuilder extends Builder {
 
     @Override
     public void saveToFile() throws IOException {
-        saveAsMdFile(new File(buildFilename()));
+        String[] names = config.getIndexNames();
+        for (String name : names) {
+            saveAsMdFile(new File(name.trim()));
+        }
     }
 
     public static String buildFilename() {
