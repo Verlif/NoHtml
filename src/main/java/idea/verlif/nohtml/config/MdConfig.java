@@ -14,11 +14,17 @@ public class MdConfig {
 
     public static final String CONFIG_NAME = "config";
 
+    public static final String CONFIG_FILENAME = "config.properties";
+
     public static final String TAGS_NAME = "tags";
 
     public static final String PATH_SPLIT = "/";
 
     public static final String INDEX_NAME = "index.md";
+
+    public static final String BACK_DIR = "backs";
+
+    public static final String BACK_NAME = "back.zip";
 
     /**
      * 标题
@@ -45,11 +51,21 @@ public class MdConfig {
      */
     private String titleSplit = "⚪";
 
+    /**
+     * 是否开启备份模式
+     */
+    private boolean enableBackup = true;
+
+    /**
+     * 备份文件最大数量
+     */
+    private int backupMax = 10;
+
     public MdConfig() {
     }
 
     public void loadConfig() throws IOException {
-        File file = new File("config.properties");
+        File file = new File(CONFIG_FILENAME);
         Properties properties = new Properties();
         if (!file.exists()) {
             saveConfig(file);
@@ -69,6 +85,8 @@ public class MdConfig {
             String indexName = Arrays.toString(indexNames);
             writer.write("\nindexName=" + indexName.substring(1, indexName.length() - 1));
             writer.write("\ntitleSplit=" + titleSplit);
+            writer.write("\nenableBackup=" + enableBackup);
+            writer.write("\nbackupMax=" + backupMax);
             writer.flush();
         }
     }
@@ -84,10 +102,20 @@ public class MdConfig {
             length = Integer.parseInt(properties.getProperty("length"));
         }
         if (properties.containsKey("indexName")) {
-            indexNames = properties.getProperty("indexName").split(",");
+            String[] names = properties.getProperty("indexName").split(",");
+            indexNames = new String[names.length];
+            for (int i = 0; i < indexNames.length; i++) {
+                indexNames[i] = names[i].trim();
+            }
         }
         if (properties.containsKey("titleSplit")) {
             titleSplit = properties.getProperty("titleSplit");
+        }
+        if (properties.containsKey("enableBackup")) {
+            enableBackup = Boolean.parseBoolean(properties.getProperty("enableBackup"));
+        }
+        if (properties.containsKey("backupMax")) {
+            backupMax = Integer.parseInt(properties.getProperty("backupMax"));
         }
     }
 
@@ -131,6 +159,22 @@ public class MdConfig {
 
     public String getTitleSplit() {
         return titleSplit;
+    }
+
+    public void setEnableBackup(boolean enableBackup) {
+        this.enableBackup = enableBackup;
+    }
+
+    public boolean isEnableBackup() {
+        return enableBackup;
+    }
+
+    public int getBackupMax() {
+        return backupMax;
+    }
+
+    public void setBackupMax(int backupMax) {
+        this.backupMax = backupMax;
     }
 
     private String getOrCreateFile(File file) throws IOException {

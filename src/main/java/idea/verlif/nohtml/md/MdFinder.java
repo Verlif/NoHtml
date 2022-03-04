@@ -136,7 +136,9 @@ public class MdFinder {
                         tag.addChild(child);
                     }
                 }
-                return tag;
+                if (tag.getMdFileCount() > 0 || tag.getChildren().size() > 0) {
+                    return tag;
+                }
             }
         }
         return null;

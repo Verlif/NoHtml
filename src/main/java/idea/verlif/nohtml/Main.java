@@ -1,5 +1,6 @@
 package idea.verlif.nohtml;
 
+import idea.verlif.nohtml.back.BackFileHolder;
 import idea.verlif.nohtml.builder.IndexBuilder;
 import idea.verlif.nohtml.builder.TagListBuilder;
 import idea.verlif.nohtml.config.MdConfig;
@@ -35,6 +36,14 @@ public class Main {
         tagListBuilder.addMdTags(finder.getAllTags());
         System.out.println("Building " + TagListBuilder.buildFilename() + "...");
         tagListBuilder.saveToFile();
+        if (config.isEnableBackup()) {
+            BackFileHolder backFileHolder = new BackFileHolder(config);
+            if (backFileHolder.backup()) {
+                System.out.println("Backup success!");
+            } else {
+                System.out.println("Backup failed!");
+            }
+        }
         System.out.println("Finished!");
     }
 }
