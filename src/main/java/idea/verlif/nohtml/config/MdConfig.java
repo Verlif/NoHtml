@@ -22,10 +22,6 @@ public class MdConfig {
 
     public static final String INDEX_NAME = "index.md";
 
-    public static final String BACK_DIR = "backs";
-
-    public static final String BACK_NAME = "back.zip";
-
     /**
      * 标题
      */
@@ -61,6 +57,11 @@ public class MdConfig {
      */
     private int backupMax = 10;
 
+    /**
+     * 记录最大数量
+     */
+    private int recordMax = 5;
+
     public MdConfig() {
     }
 
@@ -87,6 +88,7 @@ public class MdConfig {
             writer.write("\ntitleSplit=" + titleSplit);
             writer.write("\nenableBackup=" + enableBackup);
             writer.write("\nbackupMax=" + backupMax);
+            writer.write("\nrecordMax=" + recordMax);
             writer.flush();
         }
     }
@@ -117,6 +119,9 @@ public class MdConfig {
         if (properties.containsKey("backupMax")) {
             backupMax = Integer.parseInt(properties.getProperty("backupMax"));
         }
+        if (properties.containsKey("recordMax")) {
+            recordMax = Integer.parseInt(properties.getProperty("recordMax"));
+        }
     }
 
     public String getTitle() {
@@ -128,7 +133,7 @@ public class MdConfig {
     }
 
     public void setSize(int size) {
-        this.size = size;
+        this.size = Math.max(0, size);
     }
 
     public int getLength() {
@@ -136,7 +141,7 @@ public class MdConfig {
     }
 
     public void setLength(int length) {
-        this.length = length;
+        this.length = Math.max(0, length);
     }
 
     public String getIndexName() {
@@ -174,7 +179,15 @@ public class MdConfig {
     }
 
     public void setBackupMax(int backupMax) {
-        this.backupMax = backupMax;
+        this.backupMax = Math.max(1, backupMax);
+    }
+
+    public int getRecordMax() {
+        return recordMax;
+    }
+
+    public void setRecordMax(int recordMax) {
+        this.recordMax = Math.max(1, recordMax);
     }
 
     private String getOrCreateFile(File file) throws IOException {

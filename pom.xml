@@ -6,12 +6,27 @@
 
     <groupId>idea.verlif</groupId>
     <artifactId>NoHtml</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.Verlif</groupId>
+            <artifactId>cmdline-parser</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

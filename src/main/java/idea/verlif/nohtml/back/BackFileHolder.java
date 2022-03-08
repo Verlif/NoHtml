@@ -1,13 +1,19 @@
 package idea.verlif.nohtml.back;
 
-import idea.verlif.nohtml.builder.IndexBuilder;
 import idea.verlif.nohtml.builder.TagListBuilder;
 import idea.verlif.nohtml.config.MdConfig;
+import idea.verlif.nohtml.record.FileRecord;
+import idea.verlif.nohtml.record.RecordBuilder;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -17,6 +23,10 @@ import java.util.zip.ZipOutputStream;
  * @author Verlif
  */
 public class BackFileHolder {
+
+    public static final String BACK_DIR = "backs";
+
+    public static final String BACK_NAME = "back.zip";
 
     private final MdConfig mdConfig;
 
@@ -31,7 +41,7 @@ public class BackFileHolder {
      */
     public boolean backup() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-");
-        File backDir = new File(MdConfig.BACK_DIR);
+        File backDir = new File(BACK_DIR);
         if (!backDir.exists() && !backDir.mkdirs()) {
             return false;
         }
@@ -39,9 +49,9 @@ public class BackFileHolder {
         if (files != null) {
             handleFiles(files);
         }
-        File backFile = new File(backDir, sdf.format(new Date()) + MdConfig.BACK_NAME);
+        File backFile = new File(backDir, sdf.format(new Date()) + BACK_NAME);
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(backFile))) {
-            zos.setLevel(5);
+            zos.setLevel(7);
             zos.setComment("backup");
             zos.setMethod(ZipEntry.DEFLATED);
             // 备份源Markdown文件
@@ -58,6 +68,8 @@ public class BackFileHolder {
             for (String indexName : mdConfig.getIndexNames()) {
                 zip(zos, new File(indexName), indexName);
             }
+            // 备份记录
+            zip(zos, new File(RecordBuilder.RECORD_DIR), RecordBuilder.RECORD_DIR);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,7 +97,7 @@ public class BackFileHolder {
             File[] files = file.listFiles();
             // 当文件夹下没有文件时，直接创建文件夹
             if (files == null || files.length == 0) {
-                zos.putNextEntry(new ZipEntry(path + MdConfig.PATH_SPLIT));
+                zos.putNextEntry(buildEntry(path + MdConfig.PATH_SPLIT));
             } else {
                 // 对其下的文件进行遍历压缩
                 for (File f : files) {
@@ -94,7 +106,7 @@ public class BackFileHolder {
             }
         } else {
             if (path.length() > 0) {
-                zos.putNextEntry(new ZipEntry(path));
+                zos.putNextEntry(buildEntry(path));
             }
             try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
                 int length;
@@ -104,5 +116,17 @@ public class BackFileHolder {
                 }
             }
         }
+    }
+
+    private ZipEntry buildEntry(String p) throws IOException {
+        Path path = Paths.get(p);
+        BasicFileAttributeView view = Files.getFileAttributeView(path, BasicFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
+        BasicFileAttributes attr = view.readAttributes();
+
+        ZipEntry entry = new ZipEntry(p);
+        entry.setCreationTime(attr.creationTime());
+        entry.setLastModifiedTime(attr.lastModifiedTime());
+        entry.setLastAccessTime(attr.lastAccessTime());
+        return entry;
     }
 }

@@ -103,19 +103,22 @@ public class IndexBuilder extends Builder {
         sb.append(desc);
         sb.append("------\n\n");
         // 未归档
-        sb.append("## 未归档\n\n");
-        hashes.sort(new UpdateTimeSort());
-        for (int i = 0, size = Math.min(config.getSize(), hashes.size()); i < size; i++) {
-            MdFile mdFile = hashes.get(i);
-            sb.append(oneMdLink(mdFile)).append("\n\n");
-        }
-        sb.append("------\n\n");
-        // 最新md文件
-        sb.append("## 最新\n\n");
-        newest.sort(new UpdateTimeSort());
-        for (int i = 0, size = Math.min(config.getSize(), newest.size()); i < size; i++) {
-            MdFile mdFile = newest.get(i);
-            sb.append(oneMdLink(mdFile)).append("\n\n");
+        int max = config.getSize();
+        if (max > 0) {
+            sb.append("## 未归档\n\n");
+            hashes.sort(new UpdateTimeSort());
+            for (int i = 0, size = Math.min(max, hashes.size()); i < size; i++) {
+                MdFile mdFile = hashes.get(i);
+                sb.append(oneMdLink(mdFile)).append("\n\n");
+            }
+            sb.append("------\n\n");
+            // 最新md文件
+            sb.append("## 最新\n\n");
+            newest.sort(new UpdateTimeSort());
+            for (int i = 0, size = Math.min(max, newest.size()); i < size; i++) {
+                MdFile mdFile = newest.get(i);
+                sb.append(oneMdLink(mdFile)).append("\n\n");
+            }
         }
         // 结尾描述
         sb.append("------\n\n").append(config.getFooter()).append("\n")
