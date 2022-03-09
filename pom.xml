@@ -6,7 +6,7 @@
 
     <groupId>idea.verlif</groupId>
     <artifactId>NoHtml</artifactId>
-    <version>1.5</version>
+    <version>1.5.1</version>
 
     <dependencies>
         <dependency>
@@ -39,6 +39,20 @@
                             <mainClass>idea.verlif.nohtml.Main</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>dependencies/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>idea.verlif.nohtml.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
