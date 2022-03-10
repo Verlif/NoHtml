@@ -3,14 +3,13 @@ package idea.verlif.nohtml;
 import idea.verlif.nohtml.back.BackFileHolder;
 import idea.verlif.nohtml.builder.IndexBuilder;
 import idea.verlif.nohtml.builder.TagListBuilder;
-import idea.verlif.nohtml.clear.ClearCmd;
+import idea.verlif.nohtml.cmd.MdKeyParser;
 import idea.verlif.nohtml.config.MdConfig;
 import idea.verlif.nohtml.md.MdFile;
 import idea.verlif.nohtml.md.MdFinder;
 import idea.verlif.nohtml.record.RecordBuilder;
 import idea.verlif.nohtml.sort.UpdateTimeSort;
-import idea.verlif.parser.cmdline.CmdHandler;
-import idea.verlif.parser.cmdline.CmdlineParser;
+import idea.verlif.nohtml.util.PrintUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,29 +22,21 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // 加载配置文件
-        System.out.println("[~] Loading config...");
+        PrintUtil.printLoading("Loading config...");
         MdConfig config = new MdConfig();
         config.loadConfig();
-        // 初始化档案构建器
-        System.out.println("[~] Init record...");
-        RecordBuilder recordBuilder = new RecordBuilder(new File(MdConfig.DOCS_NAME), config);
-        // 解析启动指令
-        CmdlineParser parser = new CmdlineParser("--");
-        parser.addHandler("recovery", s -> {
-            System.out.println("[~] Recovering record from " + s + "...");
-            try {
-                recordBuilder.recovery(s);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        parser.addHandler("clear", new ClearCmd());
-        parser.exec(args);
+        if (args.length > 0) {
+            // 解析启动指令
+            PrintUtil.printLoading("Executing cmd...");
+            MdKeyParser parser = new MdKeyParser(config);
+            parser.initParser();
+            parser.exec(args);
+        }
         // 寻找所有的Markdown文档
-        System.out.println("[~] Finding markdown files...");
+        PrintUtil.printLoading("Finding markdown files...");
         MdFinder finder = new MdFinder(MdConfig.DOCS_NAME);
         List<MdFile> files = finder.getAllMdFiles();
-        System.out.println("[~] Found " + files.size() + " markdown files.");
+        PrintUtil.printOk("Found " + files.size() + " markdown files.");
         // Markdown文档通过更新时间排序
         files.sort(new UpdateTimeSort());
         IndexBuilder builder = new IndexBuilder(MdConfig.DOCS_NAME, config);
@@ -54,25 +45,26 @@ public class Main {
             builder.addHashes(file);
         }
         // 构建主页
-        System.out.println("[~] Building " + config.getIndexName() + "...");
+        PrintUtil.printLoading("Building " + config.getIndexName() + "...");
         builder.saveToFile();
         // 构建标签页
-        System.out.println("[~] Building " + TagListBuilder.buildFilename() + "...");
+        PrintUtil.printLoading("Building " + TagListBuilder.buildFilename() + "...");
         TagListBuilder tagListBuilder = new TagListBuilder(config);
         tagListBuilder.addMdTags(finder.getAllTags());
         tagListBuilder.saveToFile();
         // 生成新的记录
-        System.out.println("[~] Building record...");
+        PrintUtil.printLoading("Building record...");
+        RecordBuilder recordBuilder = new RecordBuilder(new File(MdConfig.DOCS_NAME), config);
         recordBuilder.build();
         // 生成新的备份文件
-        System.out.println("[~] Saving backup file...");
+        PrintUtil.printLoading("Saving backup file...");
         if (config.isEnableBackup()) {
             BackFileHolder backFileHolder = new BackFileHolder(config);
             if (!backFileHolder.backup()) {
-                System.out.println("[!] Wrong Backup!");
+                PrintUtil.printError("Wrong Backup!");
             }
         }
         // 完成
-        System.out.println("[K] Finished!");
+        PrintUtil.printOk("Finished!");
     }
 }
