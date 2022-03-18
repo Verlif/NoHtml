@@ -30,8 +30,17 @@ public class RecoveryCmd implements MdKeyHandler {
     public void handle(String s) {
         RecordBuilder recordBuilder = new RecordBuilder(new File(MdConfig.DOCS_NAME), config);
         try {
-            recordBuilder.recovery(s);
-            PrintUtil.printOk("Recovery info from " + s + ".");
+            if (s == null) {
+                String filename = recordBuilder.recoveryFromNew();
+                if (filename == null) {
+                    PrintUtil.printError("Cannot find record file.");
+                } else {
+                    PrintUtil.printOk("Recovery info from " + filename + ".");
+                }
+            } else {
+                recordBuilder.recovery(s);
+                PrintUtil.printOk("Recovery info from " + s + ".");
+            }
         } catch (IOException e) {
             PrintUtil.printError(e.getMessage());
         }

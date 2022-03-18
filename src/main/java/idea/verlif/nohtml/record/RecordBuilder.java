@@ -8,9 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author Verlif
@@ -24,6 +24,8 @@ public class RecordBuilder {
     public static final String RECORD_DIR = "records";
 
     public static final String SPLIT = ".";
+
+    private static final String TIME_FORMAT = "-yyyy-MM-dd-HH-mm-ss-";
 
     private final File target;
     private final MdConfig config;
@@ -60,7 +62,7 @@ public class RecordBuilder {
         createRecords("", target, recordMap);
 
         // 对record信息进行保存
-        SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH-mm-ss-");
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
         File file = new File(dir, target.getName() + sdf.format(new Date()) + RECORD_NAME);
         // 检测文件是否已存在
         if (file.exists()) {
@@ -81,13 +83,50 @@ public class RecordBuilder {
         }
     }
 
+    /**
+     * 从最新的文件信息中恢复
+     *
+     * @return 查询到的最新的文件名称；当没有最新的文件时，返回null
+     * @throws IOException 文件不可访问
+     */
+    public String recoveryFromNew() throws IOException {
+        File dir = new File(RECORD_DIR);
+        File file = null;
+        File[] files = dir.listFiles(pathname -> pathname.isFile()
+                        && pathname.getName().startsWith(target.getName()));
+        if (files != null && files.length > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
+            int start = target.getName().length();
+            long last = -1;
+            for (File f : files) {
+                String time = f.getName().substring(start, start + TIME_FORMAT.length());
+                long lastTime;
+                try {
+                    lastTime = sdf.parse(time).getTime();
+                } catch (ParseException e) {
+                    lastTime = f.lastModified();
+                }
+                if (lastTime > last) {
+                    file = f;
+                }
+            }
+        }
+        if (file == null) {
+            return null;
+        } else {
+            String filename = file.getName();
+            recovery(filename);
+            return filename;
+        }
+    }
+
     public void recovery(String filename) throws IOException {
         File dir = new File(RECORD_DIR);
         if (!dir.exists()) {
             throw new FileNotFoundException("Not found record directory!");
         }
         File file = new File(dir, filename);
-        if (!dir.exists()) {
+        if (!file.exists()) {
             throw new FileNotFoundException("No such record file: " + filename);
         }
         recovery(target.getName(), target, file);
