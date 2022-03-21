@@ -75,6 +75,8 @@ public class TagListBuilder extends Builder {
                         .append(tag.getPath()).append(MdConfig.PATH_SPLIT)
                         .append(mdFile.getFilename()).append(MdFile.SUFFIX)
                         .append(")\n\n");
+            } else {
+                sb.append("\n\n");
             }
             // 添加子标签
             sb.append(listMdTags(prefix + "  ", tagLinkNow, tag.getChildren()));
