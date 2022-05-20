@@ -2,6 +2,7 @@ package idea.verlif.nohtml.cmd;
 
 import idea.verlif.nohtml.cmd.handler.ConfigModifyCmd;
 import idea.verlif.nohtml.cmd.handler.ExitCmd;
+import idea.verlif.nohtml.cmd.handler.HelpCmd;
 import idea.verlif.nohtml.cmd.handler.RecoveryCmd;
 import idea.verlif.nohtml.config.MdConfig;
 import idea.verlif.parser.cmdline.CmdlineParser;
@@ -24,6 +25,7 @@ public class MdKeyParser extends CmdlineParser {
         addMdKeyHandler(new RecoveryCmd(config));
         addMdKeyHandler(new ExitCmd());
         addMdKeyHandler(new ConfigModifyCmd(config));
+        addMdKeyHandler(new HelpCmd());
     }
 
     public void addMdKeyHandler(MdKeyHandler handler) {

@@ -4,44 +4,44 @@
 
 ## 一些问题
 
-我为什么要写`NoHTML`？  
-我不喜欢通过HTML的方式书写资料或是文档，富文本也不行，只有Markdown才是真爱。
+1. `NoHTML`可以做什么？  
 
-`NoHTML`可以做什么？  
-我不知道，反正我目前是把这个用于做个人资料整理。本地一份，然后放GitHub仓库一份。用index.md作首页，开启仓库的Pages，还可以当做一个个人资料库。  
-这个 [records](https://github.com/Verlif/records) 就是我自己用NoHTML生成的。
+   我不知道，反正我目前是把这个用于做个人资料整理。本地一份，然后放GitHub仓库一份。用index.md作首页，开启仓库的Pages，还可以当做一个个人资料库。  
+   这个 [records](https://github.com/Verlif/records) 就是用`NoHTML`生成的。
 
-`NoHTML`不可以做什么？
+2. `NoHTML`不可以做什么？
 
-* 不能生成网站相关数据
-* 不能对某个文档进行评论
-* 不可以设定主题
-* 没有拓展插件
-* 高度定制需要Java基础
+   * 不能生成网站相关数据
+   * 不能对某个文档进行评论
+   * 不可以设定主题
+   * 没有拓展插件
+   * 二次开发需要Java基础
 
-为什么是`NoHTML`？
+3. 为什么是`NoHTML`？
 
-* 简单。不需要任何编程知识，不需要安装，下载后直接运行即可。由于Java特性，所以支持多平台。
-* 轻量。只会生成配置文件、备份信息与导航文件。
-* 纯净。对原`markdown`文件零修改。
-* 统一。完全基于`markdown`使用逻辑，没有`HTML`文件。
-* 同步。简单的多端同步方式与自动备份。
+   * 简单。不需要任何编程知识，不需要安装，下载后直接运行即可。
+   * 轻量。只会生成配置文件、备份信息与导航文件。
+   * 纯净。对原`markdown`文件零修改。
+   * 统一。完全基于`markdown`使用逻辑，没有`HTML`文件。
+   * 同步。简单的多端同步方式与自动备份。
 
 ## 使用
 
-可以直接下载release的jar包，也可以将此项目pull下来，进行自定义修改。
+可以直接下载 [release](https://github.com/Verlif/NoHtml/releases) 的jar包，也可以将此项目`pull`下来，进行自定义修改。
 
-1. 创建管理根目录（例如MyPage)
-2. 将jar包放在管理根目录中（MyPage/NoHTML.jar)
-3. 在管理根目录下创建docs文件夹用于放置需要管理的MD文件（MyPage/docs)
+1. 创建管理根目录（例如`MyPage`)
+2. 将jar包放在管理根目录中（`MyPage/NoHTML.jar`)
+3. 在管理根目录下创建docs文件夹用于放置需要管理的MD文件（`MyPage/docs`)
+
+   ![目录结构](imgs/目录结构.png)
+
 4. 运行jar包（例如`java -jar NoHTML.jar`)
-5. 完成
 
-其实就是下面这张图的样子。程序会读取docs下的文件来生成管理结构。
+   ![运行结果](imgs/运行结果.png)
 
-![目录结构](imgs/目录结构.png)
+5. 完成，访问`MyPage`目录下的`index.md`。
 
-每次使用只需要运行jar文件，其他文件会自行更新。
+   ![首页效果](imgs/首页效果.png)
 
 这里有NoHtml的详细使用教程 [NoHtml使用教程](https://verlif.top/records/docs/教程/NoHtml教程/NoHtml的使用与拓展.html)
 
@@ -59,6 +59,10 @@
 
 当用户通过双击或是`java -jar NoHtml.jar`等不带参数的方式运行时，会执行默认管理目录生成流程。  
 也可以通过指定参数来添加特殊步骤：
+
+* `--help`
+
+  输出所有的参数及说明。
 
 * `--recovery docs-2022-03-08-11-46-21-record.properties`
 
@@ -99,13 +103,13 @@ size=5
 length=25
 # 首页文件名（支持通过英文“,”创建多个文件，第一个会作为主页面）
 indexName=readme.md, index.md
-# 标题分隔符
+# 标题分隔符，允许使用长字符串，例如ヾ(≧▽≦*)o
 titleSplit=○
 # 是否开启备份
 enableBackup=true
 # 备份文件数量上限（当开启备份时生效，数量到达上限时，会优先删除旧的备份）
 backupMax=10
-# 记录文件数量上限
+# 记录文件数量上限，记录文件主要用在多端同步导致的文件创建时间与修改时间恢复。
 recordMax=5
 ```
 
